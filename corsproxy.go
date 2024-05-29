@@ -3,7 +3,6 @@ package corsproxy
 import (
 	"net/http"
 	"net/http/httputil"
-	"net/netip"
 	"net/url"
 	"strings"
 
@@ -119,21 +118,8 @@ func (cp *CorsProxy) isTargetAllowed(r *http.Request, target string) (allowed bo
 	}
 
 	if !cp.allowPrivateNetworkTarget {
-		var addr netip.Addr
-		var addrPort netip.AddrPort
-		host := remote.Host
-		if strings.Contains(host, ":") {
-			// Parse as address:port
-			addrPort, err = netip.ParseAddrPort(host)
-			if err == nil {
-				addr = addrPort.Addr()
-			}
-		} else {
-			// Parse as address only
-			addr, err = netip.ParseAddr(host)
-		}
-
-		if err == nil && addr.IsPrivate() {
+		private, parsed := isPrivateAddr(remote.Host)
+		if parsed && private {
 			return false, http.StatusForbidden
 		}
 	}
