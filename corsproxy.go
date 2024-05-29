@@ -13,7 +13,14 @@ import (
 // Options defines the configuration for the CORS proxy.
 type Options struct {
 	cors.Options
-	AllowedTargets            []string
+	// AllowedTargets is a list of targets a cross-domain request can reach.
+	// If the special "*" value is present in the list, all targets will be allowed except private network targets if `AllowPrivateNetworkTarget` is false.
+	// A target may contain a wildcard (*) to replace 0 or more characters (i.e.: `http://*.domain.com`).
+	// Only one wildcard can be used per target.
+	// Default value is ["*"]
+	AllowedTargets []string
+	// AllowPrivateNetworkTarget indicates whether to accept private network targets.
+	// If a private network target has been added to `AllowedTargets`, there is no need to set `AllowPrivateNetworkTarget` explicitly.
 	AllowPrivateNetworkTarget bool
 }
 
