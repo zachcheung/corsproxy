@@ -1,6 +1,7 @@
 package corsproxy
 
 import (
+	"fmt"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -51,6 +52,17 @@ func New(options Options) *CorsProxy {
 				cp.allowedWTargets = append(cp.allowedWTargets, w)
 			} else {
 				cp.allowedTargets = append(cp.allowedTargets, target)
+			}
+
+			if !cp.allowPrivateNetworkTarget {
+				remote, err := url.Parse(target)
+				if err != nil {
+					panic(fmt.Sprintf("Invalid target %s in AllowedTargets: %v", target, err))
+				}
+				private, parsed := isPrivateAddr(remote.Host)
+				if parsed && private {
+					cp.allowPrivateNetworkTarget = true
+				}
 			}
 		}
 	}
