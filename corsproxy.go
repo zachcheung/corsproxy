@@ -82,6 +82,11 @@ func New(options Options) *CorsProxy {
 func (cp *CorsProxy) Handler() http.Handler {
 	return cp.cors.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		target := strings.ToLower(strings.TrimPrefix(r.URL.Path, "/"))
+		if target == "" || target == "favicon.ico" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
 		targetStr := strings.ToLower(strings.TrimPrefix(r.URL.String(), "/"))
 
 		// Check if the target URL is allowed
