@@ -1,4 +1,4 @@
-module github.com/zachcheung/corsproxy/cmd
+module github.com/zachcheung/corsproxy/cmd/corsproxy
 
 go 1.22.3
 
