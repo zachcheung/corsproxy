@@ -10,7 +10,7 @@
 ## Installation
 
 ```shell
-go install github.com/zachcheung/corsproxy/cmd/corsproxy
+go install github.com/zachcheung/corsproxy/cmd/corsproxy@latest
 ```
 
 ## Usage
