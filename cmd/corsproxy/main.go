@@ -65,6 +65,11 @@ func main() {
 		opt.ExposedHeaders = v
 	}
 
+	if debug {
+		log.Print("[DEBUG] Debug mode")
+		log.Printf("[DEBUG] Options:\nallowedOrigins: %v\nallowedMethods: %v\nallowedHeaders: %v\nexposedHeaders: %v\nmaxAge: %v\nallowCredentials: %v\nallowPrivateNetwork: %v\npassthrough: %v\nsuccessStatus: %v\nallowedTargets: %v\nallowPrivateNetworkTarget: %v", allowedOrigins.Value(), allowedMethods.Value(), allowedHeaders.Value(), exposedHeaders.Value(), maxAge, allowCredentials, allowPrivateNetwork, passthrough, successStatus, allowedTargets.Value(), allowPrivateNetworkTarget)
+	}
+
 	cp := corsproxy.New(corsproxy.Options{
 		Options:                   opt,
 		AllowedTargets:            allowedTargets.Value(),
