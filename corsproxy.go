@@ -57,7 +57,7 @@ func New(options Options) *CorsProxy {
 				// Split the target into prefix and suffix based on the wildcard '*'
 				w := wildcard{target[:i], target[i+1:]}
 				cp.allowedWTargets = append(cp.allowedWTargets, w)
-			} else {
+			} else if target != "" {
 				cp.allowedTargets = append(cp.allowedTargets, target)
 			}
 
