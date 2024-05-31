@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"slices"
+	"strings"
 
 	"github.com/rs/cors"
 	"github.com/zachcheung/eflag"
@@ -14,7 +16,7 @@ import (
 var (
 	allowedOrigins            eflag.StringList
 	allowedMethods            eflag.StringList
-	allowedHeaders            eflag.StringList
+	extraAllowedHeaders       eflag.StringList
 	exposedHeaders            eflag.StringList
 	maxAge                    int
 	allowCredentials          bool
@@ -25,12 +27,13 @@ var (
 	allowedTargets            eflag.StringList
 	allowPrivateNetworkTarget bool
 	addr                      string
+	defaultAllowedHeaders     = []string{"accept", "content-type", "x-requested-with"}
 )
 
 func main() {
 	eflag.Var(&allowedOrigins, "allowedOrigins", "", "a list of origins a cross-domain request can be executed from", "")
 	eflag.Var(&allowedMethods, "allowedMethods", "", "a list of methods the client is allowed to use with cross-domain requests", "")
-	eflag.Var(&allowedHeaders, "allowedHeaders", "", "a list of non simple headers the client is allowed to use with cross-domain requests", "")
+	eflag.Var(&extraAllowedHeaders, "extraAllowedHeaders", "", fmt.Sprintf("a list of headers the client is allowed to use with cross-domain requests alongside default allowed headers: %v", strings.Join(defaultAllowedHeaders, ", ")), "")
 	eflag.Var(&exposedHeaders, "exposedHeaders", "", "indicates which headers are safe to expose to the API of a CORS API specification", "")
 	eflag.Var(&maxAge, "maxAge", 0, "indicates how long (in seconds) the results of a preflight request can be cached", "")
 	eflag.Var(&allowCredentials, "allowCredentials", false, "indicates whether the request can include user credentials like cookies, HTTP authentication or client side SSL certificates", "")
@@ -58,8 +61,8 @@ func main() {
 	if v := allowedMethods.Value(); len(v) > 0 {
 		opt.AllowedMethods = v
 	}
-	if v := allowedHeaders.Value(); len(v) > 0 {
-		opt.AllowedHeaders = v
+	if v := extraAllowedHeaders.Value(); len(v) > 0 {
+		opt.AllowedHeaders = slices.Concat(defaultAllowedHeaders, v)
 	}
 	if v := exposedHeaders.Value(); len(v) > 0 {
 		opt.ExposedHeaders = v
@@ -67,7 +70,7 @@ func main() {
 
 	if debug {
 		log.Print("[DEBUG] Debug mode")
-		log.Printf("[DEBUG] Options:\nallowedOrigins: %v\nallowedMethods: %v\nallowedHeaders: %v\nexposedHeaders: %v\nmaxAge: %v\nallowCredentials: %v\nallowPrivateNetwork: %v\npassthrough: %v\nsuccessStatus: %v\nallowedTargets: %v\nallowPrivateNetworkTarget: %v", allowedOrigins.Value(), allowedMethods.Value(), allowedHeaders.Value(), exposedHeaders.Value(), maxAge, allowCredentials, allowPrivateNetwork, passthrough, successStatus, allowedTargets.Value(), allowPrivateNetworkTarget)
+		log.Printf("[DEBUG] Options:\nallowedOrigins: %v\nallowedMethods: %v\nextraAllowedHeaders: %v\nexposedHeaders: %v\nmaxAge: %v\nallowCredentials: %v\nallowPrivateNetwork: %v\npassthrough: %v\nsuccessStatus: %v\nallowedTargets: %v\nallowPrivateNetworkTarget: %v", allowedOrigins.Value(), allowedMethods.Value(), extraAllowedHeaders.Value(), exposedHeaders.Value(), maxAge, allowCredentials, allowPrivateNetwork, passthrough, successStatus, allowedTargets.Value(), allowPrivateNetworkTarget)
 	}
 
 	cp := corsproxy.New(corsproxy.Options{
