@@ -50,9 +50,9 @@ func isPrivateAddr(host string) (private bool, parsed bool) {
 	return addr.IsPrivate() || addr.IsLoopback(), true
 }
 
-// stripURLQuery takes a raw URL string, normalizes it, and returns the URL without the query string.
-func stripURLQuery(rawURL string) (string, error) {
-	normalizedURL, err := normalizeURL(rawURL)
+// StripURLQuery takes a raw URL string, normalizes it, and returns the URL without the query string.
+func StripURLQuery(rawURL string) (string, error) {
+	normalizedURL, err := NormalizeURL(rawURL)
 	if err != nil {
 		return "", err
 	}
@@ -60,9 +60,9 @@ func stripURLQuery(rawURL string) (string, error) {
 	return strings.SplitN(normalizedURL, "?", 2)[0], nil
 }
 
-// normalizeURL takes a raw URL string and normalizes it by converting the host to lowercase.
-func normalizeURL(rawURL string) (string, error) {
-	parsedURL, err := normalizeParseURL(rawURL)
+// NormalizeURL takes a raw URL string and normalizes it by converting the host to lowercase.
+func NormalizeURL(rawURL string) (string, error) {
+	parsedURL, err := NormalizeParseURL(rawURL)
 	if err != nil {
 		return "", err
 	}
@@ -70,8 +70,8 @@ func normalizeURL(rawURL string) (string, error) {
 	return parsedURL.String(), nil
 }
 
-// normalizeParseURL takes a raw URL string, parses it into a *url.URL, and normalizes it by converting the host to lowercase.
-func normalizeParseURL(rawURL string) (*url.URL, error) {
+// NormalizeParseURL takes a raw URL string, parses it into a *url.URL, and normalizes it by converting the host to lowercase.
+func NormalizeParseURL(rawURL string) (*url.URL, error) {
 	parsedURL, err := url.Parse(rawURL)
 	if err != nil {
 		return nil, err

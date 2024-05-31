@@ -106,7 +106,7 @@ func (cp *CorsProxy) Handler() http.Handler {
 		}
 
 		// Parse and normalize the target URL
-		remote, err := normalizeParseURL(targetStr)
+		remote, err := NormalizeParseURL(targetStr)
 		if err != nil {
 			http.Error(w, "Invalid target URL", http.StatusBadRequest)
 			return
@@ -131,7 +131,7 @@ func (cp *CorsProxy) Handler() http.Handler {
 // isTargetAllowed checks if the target URL is allowed based on the proxy's configuration.
 func (cp *CorsProxy) isTargetAllowed(r *http.Request, target string) (allowed bool, statusCode int) {
 	// Parse and normalize the target URL
-	remote, err := normalizeParseURL(target)
+	remote, err := NormalizeParseURL(target)
 	if err != nil {
 		return false, http.StatusBadRequest
 	}
