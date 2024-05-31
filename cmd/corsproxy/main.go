@@ -28,6 +28,7 @@ var (
 	allowPrivateNetworkTarget bool
 	addr                      string
 	defaultAllowedHeaders     = []string{"accept", "content-type", "x-requested-with"}
+	normalizedAllowedTargets  []string
 )
 
 func main() {
@@ -67,10 +68,19 @@ func main() {
 	if v := exposedHeaders.Value(); len(v) > 0 {
 		opt.ExposedHeaders = v
 	}
+	if v := allowedTargets.Value(); len(v) > 0 {
+		for _, target := range v {
+			target, err := corsproxy.StripURLQuery(target)
+			if err != nil {
+				panic(fmt.Sprintf("Invalid target %s: %v", target, err))
+			}
+			normalizedAllowedTargets = append(normalizedAllowedTargets, target)
+		}
+	}
 
 	if debug {
 		log.Print("[DEBUG] Debug mode")
-		log.Printf("[DEBUG] Options:\nallowedOrigins: %v\nallowedMethods: %v\nextraAllowedHeaders: %v\nexposedHeaders: %v\nmaxAge: %v\nallowCredentials: %v\nallowPrivateNetwork: %v\npassthrough: %v\nsuccessStatus: %v\nallowedTargets: %v\nallowPrivateNetworkTarget: %v", allowedOrigins.Value(), allowedMethods.Value(), extraAllowedHeaders.Value(), exposedHeaders.Value(), maxAge, allowCredentials, allowPrivateNetwork, passthrough, successStatus, allowedTargets.Value(), allowPrivateNetworkTarget)
+		log.Printf("[DEBUG] Options:\nallowedOrigins: %v\nallowedMethods: %v\nextraAllowedHeaders: %v\nexposedHeaders: %v\nmaxAge: %v\nallowCredentials: %v\nallowPrivateNetwork: %v\npassthrough: %v\nsuccessStatus: %v\nallowedTargets: %v\nnormalizedAllowedTargets: %v\nallowPrivateNetworkTarget: %v", allowedOrigins.Value(), allowedMethods.Value(), extraAllowedHeaders.Value(), exposedHeaders.Value(), maxAge, allowCredentials, allowPrivateNetwork, passthrough, successStatus, allowedTargets.Value(), normalizedAllowedTargets, allowPrivateNetworkTarget)
 	}
 
 	cp := corsproxy.New(corsproxy.Options{
