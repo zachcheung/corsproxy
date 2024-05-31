@@ -81,13 +81,13 @@ func New(options Options) *CorsProxy {
 // Handler returns an HTTP handler that proxies requests with CORS support.
 func (cp *CorsProxy) Handler() http.Handler {
 	return cp.cors.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		target := strings.ToLower(strings.TrimPrefix(r.URL.Path, "/"))
+		target := strings.TrimPrefix(r.URL.Path, "/")
 		if target == "" || target == "favicon.ico" {
 			w.WriteHeader(http.StatusOK)
 			return
 		}
 
-		targetStr := strings.ToLower(strings.TrimPrefix(r.URL.String(), "/"))
+		targetStr := strings.TrimPrefix(r.URL.String(), "/")
 
 		// Check if the target URL is allowed
 		allowed, statusCode := cp.isTargetAllowed(r, target)
@@ -105,8 +105,8 @@ func (cp *CorsProxy) Handler() http.Handler {
 			return
 		}
 
-		// Parse the target URL
-		remote, err := url.Parse(targetStr)
+		// Parse and normalize the target URL
+		remote, err := normalizeParseURL(targetStr)
 		if err != nil {
 			http.Error(w, "Invalid target URL", http.StatusBadRequest)
 			return
@@ -130,14 +130,14 @@ func (cp *CorsProxy) Handler() http.Handler {
 
 // isTargetAllowed checks if the target URL is allowed based on the proxy's configuration.
 func (cp *CorsProxy) isTargetAllowed(r *http.Request, target string) (allowed bool, statusCode int) {
-	// Ensure the target URL has a valid scheme
-	if !strings.HasPrefix(target, "http://") && !strings.HasPrefix(target, "https://") {
+	// Parse and normalize the target URL
+	remote, err := normalizeParseURL(target)
+	if err != nil {
 		return false, http.StatusBadRequest
 	}
 
-	// Parse the target URL
-	remote, err := url.Parse(target)
-	if err != nil {
+	// Ensure the target URL has a valid scheme
+	if remote.Scheme != "https" && remote.Scheme != "http" {
 		return false, http.StatusBadRequest
 	}
 

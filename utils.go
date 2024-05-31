@@ -2,6 +2,7 @@ package corsproxy
 
 import (
 	"net/netip"
+	"net/url"
 	"strings"
 )
 
@@ -47,4 +48,36 @@ func isPrivateAddr(host string) (private bool, parsed bool) {
 
 	// Check if the address is private or loopback
 	return addr.IsPrivate() || addr.IsLoopback(), true
+}
+
+// stripURLQuery takes a raw URL string, normalizes it, and returns the URL without the query string.
+func stripURLQuery(rawURL string) (string, error) {
+	normalizedURL, err := normalizeURL(rawURL)
+	if err != nil {
+		return "", err
+	}
+
+	return strings.SplitN(normalizedURL, "?", 2)[0], nil
+}
+
+// normalizeURL takes a raw URL string and normalizes it by converting the host to lowercase.
+func normalizeURL(rawURL string) (string, error) {
+	parsedURL, err := normalizeParseURL(rawURL)
+	if err != nil {
+		return "", err
+	}
+
+	return parsedURL.String(), nil
+}
+
+// normalizeParseURL takes a raw URL string, parses it into a *url.URL, and normalizes it by converting the host to lowercase.
+func normalizeParseURL(rawURL string) (*url.URL, error) {
+	parsedURL, err := url.Parse(rawURL)
+	if err != nil {
+		return nil, err
+	}
+
+	parsedURL.Host = strings.ToLower(parsedURL.Host)
+
+	return parsedURL, nil
 }
