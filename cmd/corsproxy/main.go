@@ -27,7 +27,7 @@ var (
 	allowedTargets            eflag.StringList
 	allowPrivateNetworkTarget bool
 	addr                      string
-	defaultAllowedHeaders     = []string{"accept", "content-type", "x-requested-with"}
+	defaultAllowedHeaders     = []string{"accept", "content-type", "x-requested-with", "authorization"}
 	normalizedAllowedTargets  []string
 )
 
@@ -64,6 +64,8 @@ func main() {
 	}
 	if v := extraAllowedHeaders.Value(); len(v) > 0 {
 		opt.AllowedHeaders = slices.Concat(defaultAllowedHeaders, v)
+	} else {
+		opt.AllowedHeaders = defaultAllowedHeaders
 	}
 	if v := exposedHeaders.Value(); len(v) > 0 {
 		opt.ExposedHeaders = v

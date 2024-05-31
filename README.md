@@ -16,7 +16,7 @@ go install github.com/zachcheung/corsproxy/cmd/corsproxy@latest
 ## Usage
 
 ```shell
-corsproxy -extraAllowedHeaders "Authorization" -allowedTargets "https://*.example.com,https://foo.bar"
+corsproxy -allowedTargets "https://*.example.com,https://foo.bar"
 ```
 
 Please refer to [rs/cors](https://github.com/rs/cors) for detailed information on CORS-related options.
