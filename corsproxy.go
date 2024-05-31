@@ -46,7 +46,10 @@ func New(options Options) *CorsProxy {
 		cp.allowedTargetsAll = true
 	default:
 		for _, target := range options.AllowedTargets {
-			target = strings.ToLower(target)
+			target, err := StripURLQuery(target)
+			if err != nil {
+				panic(fmt.Sprintf("Invalid target %s in AllowedTargets: %v", target, err))
+			}
 			if target == "*" {
 				// If "*" is present in the list, allow all targets except private network targets if AllowPrivateNetworkTarget is false
 				cp.allowedTargetsAll = true
@@ -62,10 +65,8 @@ func New(options Options) *CorsProxy {
 			}
 
 			if !cp.allowPrivateNetworkTarget {
-				remote, err := url.Parse(target)
-				if err != nil {
-					panic(fmt.Sprintf("Invalid target %s in AllowedTargets: %v", target, err))
-				}
+				// target has been normalized
+				remote, _ := url.Parse(target)
 				private, parsed := isPrivateAddr(remote.Host)
 				if parsed && private {
 					cp.allowPrivateNetworkTarget = true
