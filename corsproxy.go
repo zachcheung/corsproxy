@@ -115,6 +115,9 @@ func (cp *CorsProxy) Handler() http.Handler {
 
 		// Create the reverse proxy
 		proxy := httputil.NewSingleHostReverseProxy(remote)
+		// remove Origin and Referer from request header
+		r.Header.Del("Origin")
+		r.Header.Del("Referer")
 		proxy.Director = func(req *http.Request) {
 			req.Header = r.Header
 			req.Host = remote.Host
