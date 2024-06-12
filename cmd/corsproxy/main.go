@@ -27,13 +27,14 @@ var (
 	allowedTargets            eflag.StringList
 	allowPrivateNetworkTarget bool
 	addr                      string
+	defaultAllowedMethods     = []string{http.MethodGet, http.MethodHead, http.MethodPost, http.MethodPut, http.MethodPatch, http.MethodDelete}
 	defaultAllowedHeaders     = []string{"accept", "content-type", "x-requested-with", "authorization"}
 	normalizedAllowedTargets  []string
 )
 
 func main() {
 	eflag.Var(&allowedOrigins, "allowedOrigins", "", "a list of origins a cross-domain request can be executed from", "")
-	eflag.Var(&allowedMethods, "allowedMethods", "", "a list of methods the client is allowed to use with cross-domain requests", "")
+	eflag.Var(&allowedMethods, "allowedMethods", strings.Join(defaultAllowedMethods, ", "), "a list of methods the client is allowed to use with cross-domain requests", "")
 	eflag.Var(&allowedHeaders, "allowedHeaders", strings.Join(defaultAllowedHeaders, ", "), "a list of headers the client is allowed to use with cross-domain requests", "")
 	eflag.Var(&exposedHeaders, "exposedHeaders", "", "indicates which headers are safe to expose to the API of a CORS API specification", "")
 	eflag.Var(&maxAge, "maxAge", 0, "indicates how long (in seconds) the results of a preflight request can be cached", "")
