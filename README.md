@@ -9,6 +9,16 @@
 
 ## Installation
 
+* [releases](https://github.com/zachcheung/corsproxy/releases)
+
+* docker
+
+```shell
+docker pull ghcr.io/zachcheung/corsproxy
+```
+
+* go install
+
 ```shell
 go install github.com/zachcheung/corsproxy/cmd/corsproxy@latest
 ```
@@ -16,10 +26,14 @@ go install github.com/zachcheung/corsproxy/cmd/corsproxy@latest
 ## Usage
 
 ```shell
-corsproxy -allowedTargets "https://*.example.com,https://foo.bar"
+corsproxy -allowedTargets "https://*.example.com,http://ip.me"
 ```
 
 Please refer to [rs/cors](https://github.com/rs/cors) for detailed information on CORS-related options.
+
+Request examples:
+
+* `http://localhost:8000/http://ip.me`
 
 ## License
 
