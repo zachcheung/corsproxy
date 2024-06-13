@@ -1,0 +1,36 @@
+version: 2
+
+builds:
+  - id: binary
+    main: ./cmd/corsproxy
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+
+kos:
+  - build: binary
+    labels:
+      org.opencontainers.image.title: corsproxy
+      org.opencontainers.image.description: Yet Another CORS Proxy Written in Go
+      org.opencontainers.image.url: https://github.com/zachcheung/corsproxy
+      org.opencontainers.image.source: https://github.com/zachcheung/corsproxy
+      org.opencontainers.image.licenses: MIT
+    platforms:
+      - linux/amd64
+    tags:
+      - 'v{{ .Version }}'
+      - '{{ .FullCommit }}'
+      - latest
+    sbom: none
+    bare: true
+    preserve_import_paths: false
