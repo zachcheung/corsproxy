@@ -64,9 +64,7 @@ func main() {
 		opt.AllowedMethods = v
 	}
 	if v := allowedHeaders.Value(); len(v) > 0 {
-		opt.AllowedHeaders = slices.Concat(defaultAllowedHeaders, v)
-	} else {
-		opt.AllowedHeaders = defaultAllowedHeaders
+		opt.AllowedHeaders = v
 	}
 	if v := exposedHeaders.Value(); len(v) > 0 {
 		opt.ExposedHeaders = v
