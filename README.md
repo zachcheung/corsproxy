@@ -35,6 +35,10 @@ Request examples:
 
 * `http://localhost:8000/https://ipinfo.io/json`
 
+Live examples:
+
+* https://corsproxy-c6ln.onrender.com/ - render.com free web service tier
+
 ## License
 
 [MIT](LICENSE)
