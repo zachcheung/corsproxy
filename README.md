@@ -39,6 +39,22 @@ Live examples:
 
 * https://corsproxy-c6ln.onrender.com/ - render.com free web service tier
 
+```console
+$ curl https://corsproxy-c6ln.onrender.com/https://ipinfo.io/json
+{
+  "ip": "44.227.217.144",
+  "hostname": "ec2-44-227-217-144.us-west-2.compute.amazonaws.com",
+  "city": "Boardman",
+  "region": "Oregon",
+  "country": "US",
+  "loc": "45.8399,-119.7006",
+  "org": "AS16509 Amazon.com, Inc.",
+  "postal": "97818",
+  "timezone": "America/Los_Angeles",
+  "readme": "https://ipinfo.io/missingauth"
+}
+```
+
 ## License
 
 [MIT](LICENSE)
