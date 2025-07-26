@@ -37,10 +37,10 @@ Request examples:
 
 Live examples:
 
-* https://corsproxy-c6ln.onrender.com/ - render.com free web service tier
+* https://corsproxy-latest.onrender.com/ - render.com free web service tier
 
 ```console
-$ curl https://corsproxy-c6ln.onrender.com/https://ipinfo.io/json
+$ curl https://corsproxy-latest.onrender.com/https://ipinfo.io/json
 {
   "ip": "44.227.217.144",
   "hostname": "ec2-44-227-217-144.us-west-2.compute.amazonaws.com",
